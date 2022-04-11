@@ -5,6 +5,7 @@ import "./Navbar.css";
 import { useLocation } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "../../firebase.init";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { pathname } = useLocation();
@@ -24,7 +25,8 @@ const Navbar = () => {
   const userSignOut = () => {
     signOut(auth)
       .then(() => {
-        // navigate("/login");
+        navigate("/login");
+        toast.success("Successfully loged out", { id: "toast3" });
         console.log("u just sign out");
       })
       .catch((error) => {

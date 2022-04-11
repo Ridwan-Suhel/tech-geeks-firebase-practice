@@ -4,6 +4,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { useState } from "react";
+import toast from "react-hot-toast";
 // import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GoogleLogo from "../../Assets/Image/google.svg";
@@ -23,6 +24,7 @@ const Signup = () => {
 
   const submitSignUpForm = (event) => {
     event.preventDefault();
+    // toast("Here is your toast.", { id: "toast" });
 
     if (email.value === "") {
       setEmail({ value: "", error: "Email is Required" });
@@ -42,11 +44,17 @@ const Signup = () => {
       createUserWithEmailAndPassword(auth, email.value, password.value)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          toast.success("You Successfully Registered", { id: "toast2" });
+          navigate("/");
         })
         .catch((error) => {
           const errorMessage = error.message;
-          console.log(errorMessage);
+          if (errorMessage.includes("already-in-use")) {
+            toast.error("Email Already Registered", { id: "toast1" });
+          } else {
+            toast.error(errorMessage, { id: "toast1" });
+          }
+          // console.log(errorMessage);
         });
     }
   };

@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,10 +26,15 @@ const Login = () => {
         // Signed in
         const user = userCredential.user;
         console.log("Sign in");
+        navigate("/");
+        toast.success("Sucessfullt logged in", { id: "toast4" });
       })
       .catch((error) => {
         const errorMessage = error.message;
         console.log(errorMessage);
+        if (errorMessage.includes("wrong-password")) {
+          toast.error("Oops! wrong-password", { id: "toast5" });
+        }
       });
   };
 
