@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Blog from "../Blog/Blog";
 import "./Home.css";
 import { BlogContext } from "../../App";
+import PageTitle from "../Shared/PageTitle";
 
 const Home = () => {
   // const [blogs, setBlogs] = useState([]);
@@ -14,10 +15,11 @@ const Home = () => {
   }, []);
 
   return (
-    <div className='blogs-container'>
+    <div className="blogs-container">
       {blogs.map((blog, index) => (
         <Blog key={index} blog={blog} />
       ))}
+      <PageTitle title="Home"></PageTitle>
     </div>
   );
 };

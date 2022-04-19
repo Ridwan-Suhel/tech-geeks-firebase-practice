@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./AuthForm.css";
 import GoogleLogo from "../../Assets/Image/google.svg";
 import { useNavigate } from "react-router-dom";
@@ -9,17 +9,27 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import toast from "react-hot-toast";
+import PageTitle from "../Shared/PageTitle";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const provider = new GoogleAuthProvider();
 
+  const [email, setEmail] = useState({ value: "", error: "" });
+  const [password, setPassword] = useState({ value: "", error: "" });
+
   const handleSignInForm = (event) => {
     event.preventDefault();
 
     const email = event.target.email.value;
+    if (email === "") {
+      setEmail({ value: "", error: "Email Is Required" });
+    }
     const password = event.target.password.value;
+    if (password === "") {
+      setPassword({ value: "", error: "Password Is Required" });
+    }
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -27,7 +37,7 @@ const Login = () => {
         const user = userCredential.user;
         console.log("Sign in");
         navigate("/");
-        toast.success("Sucessfullt logged in", { id: "toast4" });
+        toast.success("Sucessfully logged in", { id: "toast4" });
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -38,34 +48,67 @@ const Login = () => {
       });
   };
 
+  const handleEmailBlur = (inputEmail) => {
+    if (inputEmail !== "") {
+      setEmail({ value: "", error: "" });
+    }
+  };
+
+  const handlePasswordBlur = (inputPass) => {
+    if (inputPass !== "") {
+      setPassword({ value: "", error: "" });
+    }
+  };
+
   const handleGglSignIn = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
         navigate("/");
+        toast.success("Sucessfully logged in", { id: "toast6" });
       })
       .catch((error) => {
         const errorMessage = error.message;
         console.log(errorMessage);
+        if (errorMessage.includes("popup-closed-by-user")) {
+          toast.error("You didn't sign in", { id: "toast7" });
+        }
       });
   };
 
   return (
     <div className="auth-form-container ">
+      <PageTitle title="Login"></PageTitle>
       <div className="auth-form">
         <h1>Login</h1>
         <form onSubmit={handleSignInForm}>
           <div className="input-field">
             <label htmlFor="email">Email</label>
             <div className="input-wrapper">
-              <input type="email" name="email" id="email" />
+              <input
+                onBlur={(event) => {
+                  handleEmailBlur(event.target.value);
+                }}
+                type="email"
+                name="email"
+                id="email"
+              />
             </div>
+            {<p className="error">{email?.error && email.error}</p>}
           </div>
           <div className="input-field">
             <label htmlFor="password">Password</label>
             <div className="input-wrapper">
-              <input type="password" name="password" id="password" />
+              <input
+                onBlur={(event) => {
+                  handlePasswordBlur(event.target.value);
+                }}
+                type="password"
+                name="password"
+                id="password"
+              />
             </div>
+            {password?.error && <p className="error">{password.error}</p>}
           </div>
           <button type="submit" className="auth-form-submit">
             Login

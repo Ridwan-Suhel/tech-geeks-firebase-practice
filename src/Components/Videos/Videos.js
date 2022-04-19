@@ -1,8 +1,10 @@
 import React from "react";
+import PageTitle from "../Shared/PageTitle";
 
 const Videos = () => {
   return (
     <div>
+      <PageTitle title="videos"></PageTitle>
       <h1>This is videos page</h1>
       {/* <iframe
         width='890'

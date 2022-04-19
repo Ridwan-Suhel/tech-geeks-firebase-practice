@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import GoogleLogo from "../../Assets/Image/google.svg";
 import auth from "../../firebase.init";
+import PageTitle from "../Shared/PageTitle";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -129,15 +130,20 @@ const Signup = () => {
       .then((result) => {
         const user = result.user;
         navigate("/");
+        toast.success("Sucessfully logged in", { id: "toast8" });
       })
       .catch((error) => {
         const errorMessage = error.message;
         console.log(errorMessage);
+        if (errorMessage.includes("popup-closed-by-user")) {
+          toast.error("You didn't sign up", { id: "toast9" });
+        }
       });
   };
 
   return (
     <div className="auth-form-container ">
+      <PageTitle title="Sign up"></PageTitle>
       <div className="auth-form">
         <h1>Sign Up</h1>
         <form onSubmit={submitSignUpForm}>
